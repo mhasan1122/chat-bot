@@ -3,31 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>LimoChat Chatbot</title>
     <style>
         /* General Reset */
         body {
             font-family: 'Poppins', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f6f8;
+            background: linear-gradient(135deg, #2E2E78 0%, #2E769E 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            overflow: hidden;
         }
 
         /* Chat Container */
         #chat-container {
-            width: 450px;
-            max-width: 95%;
+            width: 90%;
+            max-width: 600px;
+            height: 90vh;
             background-color: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            position: relative;
             animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Header with Name */
+        #chat-header {
+            padding: 15px 20px;
+            background-color: #2E2E78;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Chat Output Area */
@@ -35,31 +49,31 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            border-bottom: 1px solid #e0e0e0;
-            background-color: #fafafa;
+            background-color: #F6DFCC;
         }
 
         /* Message Styling */
         #chat-output p {
             margin: 10px 0;
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 75%;
             animation: slideIn 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         /* User Message */
         #chat-output p.user-message {
-            background-color: #d1e7dd;
-            color: #155724;
+            background-color: #2E769E;
+            color: #ffffff;
             align-self: flex-end;
             margin-left: auto;
         }
 
         /* AI Message */
         #chat-output p.ai-message {
-            background-color: #cce5ff;
-            color: #0c5460;
+            background-color: #F6DFCC;
+            color: #2E2E78;
             align-self: flex-start;
             margin-right: auto;
         }
@@ -75,33 +89,35 @@
         /* Input Field */
         #chat-input {
             flex: 1;
-            padding: 12px;
+            padding: 12px 18px;
             border: 1px solid #ddd;
-            border-radius: 20px;
+            border-radius: 25px;
             outline: none;
             font-size: 16px;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         #chat-input:focus {
-            border-color: #4CAF50;
+            border-color: #2E769E;
+            box-shadow: 0 0 8px rgba(46, 118, 158, 0.3);
         }
 
         /* Send Button */
         button {
             margin-left: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
+            padding: 12px 25px;
+            background-color: #2E2E78;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #2E769E;
+            transform: translateY(-2px);
         }
 
         /* Scrollbar Styling */
@@ -110,12 +126,12 @@
         }
 
         #chat-output::-webkit-scrollbar-thumb {
-            background: #ccc;
+            background: #2E769E;
             border-radius: 10px;
         }
 
         #chat-output::-webkit-scrollbar-track {
-            background: #f9f9f9;
+            background: #f0f0f0;
         }
 
         /* Animations */
@@ -132,10 +148,10 @@
         /* Typing Indicator */
         .typing-indicator {
             display: inline-block;
-            padding: 10px 15px;
-            background-color: #cce5ff;
-            color: #0c5460;
-            border-radius: 15px;
+            padding: 12px 18px;
+            background-color: #F6DFCC;
+            color: #2E2E78;
+            border-radius: 20px;
             align-self: flex-start;
             margin-right: auto;
             animation: typing 1s infinite;
@@ -149,58 +165,66 @@
     </style>
 </head>
 <body>
-
-<div id="chat-container">
-    <div id="chat-output"></div>
-    <div id="chat-input-section">
-        <input type="text" id="chat-input" placeholder="Ask me anything..." />
-        <button onclick="sendMessage()">Send</button>
+    <div id="chat-container">
+        <div id="chat-header">LimoChat</div>
+        <div id="chat-output"></div>
+        <div id="chat-input-section">
+            <input type="text" id="chat-input" placeholder="Ask LimoChat chatbot anything..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
-</div>
 
-<script>
-async function sendMessage() {
-    const input = document.getElementById("chat-input").value.trim();
-    const chatOutput = document.getElementById("chat-output");
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("chat-input").value.trim();
+            const chatOutput = document.getElementById("chat-output");
 
-    if (!input) return;
+            if (!input) return;
 
-    // Display user message
-    chatOutput.innerHTML += `<p class="user-message"><strong>You:</strong> ${input}</p>`;
-    chatOutput.scrollTop = chatOutput.scrollHeight;
+            // Display user message
+            chatOutput.innerHTML += `<p class="user-message"><strong>You:</strong> ${input}</p>`;
+            chatOutput.scrollTop = chatOutput.scrollHeight;
 
-    // Show typing indicator
-    chatOutput.innerHTML += `<p class="typing-indicator">AI is typing...</p>`;
-    chatOutput.scrollTop = chatOutput.scrollHeight;
+            // Show typing indicator
+            chatOutput.innerHTML += `<p class="typing-indicator">LimoChat is typing...</p>`;
+            chatOutput.scrollTop = chatOutput.scrollHeight;
 
-    try {
-        const response = await fetch("http://localhost:3000/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: input }),
-        });
+            try {
+                const response = await fetch("http://localhost:3000/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: input }),
+                });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Remove typing indicator
+                chatOutput.removeChild(chatOutput.lastChild);
+
+                // Display AI message
+                chatOutput.innerHTML += `<p class="ai-message"><strong>LimoChat:</strong> ${data.reply}</p>`;
+                chatOutput.scrollTop = chatOutput.scrollHeight;
+            } catch (error) {
+                console.error("Fetch error:", error);
+                chatOutput.removeChild(chatOutput.lastChild);
+                chatOutput.innerHTML += `<p style="color:red;">Error: ${error.message}</p>`;
+                chatOutput.scrollTop = chatOutput.scrollHeight;
+            }
+
+            // Clear input field
+            document.getElementById("chat-input").value = "";
         }
 
-        const data = await response.json();
-
-        // Remove typing indicator
-        chatOutput.removeChild(chatOutput.lastChild);
-
-        // Display AI message
-        chatOutput.innerHTML += `<p class="ai-message"><strong>AI:</strong> ${data.reply}</p>`;
-        chatOutput.scrollTop = chatOutput.scrollHeight;
-    } catch (error) {
-        console.error("Fetch error:", error);
-        chatOutput.innerHTML += `<p style="color:red;">Error: ${error.message}</p>`;
-    }
-
-    // Clear input field
-    document.getElementById("chat-input").value = "";
-}
-</script>
-
+        // Allow sending message with Enter key
+        document.getElementById("chat-input").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
 </body>
 </html>
